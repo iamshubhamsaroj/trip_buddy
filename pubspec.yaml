@@ -28,6 +28,8 @@ dependencies:
   datetime_picker_formfield: ^2.0.0
   get: ^4.1.4
   get_storage: ^2.0.2
+  contacts_service:
+  
 
 dev_dependencies:
   flutter_test:
@@ -42,5 +44,7 @@ flutter:
   - lib/images/logo/logo.png
   - lib/images/flatmates.png
   - lib/images/Friends.png
+  - lib/images/travel.png
+  - lib/images/sign.png
   - lib/images/office.png
   - lib/images/Trip.jpg

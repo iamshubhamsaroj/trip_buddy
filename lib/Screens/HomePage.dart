@@ -36,8 +36,12 @@ class HomePage extends StatelessWidget {
             itemBuilder: (context,index){
 
               return Card(
+
                 child: ListTile(
-                  title: Text(tripData[index]['name']),
+                  
+
+                  title: Text(tripData[index]['name'],
+                  ),
 
                   onTap: (){
                     Get.to(() => TripDetails(tripId: tripData[index].id));

@@ -27,7 +27,7 @@ class LoginPage extends StatelessWidget {
           Container(
             child: Text(
               'Tripbuddy',
-              style: GoogleFonts.meriendaOne(
+              style: GoogleFonts.montserrat(
                   textStyle:
                       TextStyle(
                        color: Colors.black,
@@ -38,7 +38,7 @@ class LoginPage extends StatelessWidget {
           Container(
             child: Text(
               'Online travelling expense manager ',
-              style: GoogleFonts.raleway(textStyle: TextStyle(fontSize: 17)),
+              style: GoogleFonts.montserrat(textStyle: TextStyle(fontSize: 17)),
             ),
           ),
           SizedBox(
@@ -49,25 +49,13 @@ class LoginPage extends StatelessWidget {
               child: InkWell(
                 child: Container(
                     width: 280,
-                       child: Text(
-                      "sign in",
-                      
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.raleway(
-                          textStyle: TextStyle(
-                              fontSize: 30, fontWeight: FontWeight.bold)),
-                    ),
                     decoration: BoxDecoration(
-                   image: DecorationImage(
-                     alignment: Alignment(-0.7,-0.5),image: AssetImage("lib/images/google.png",)) ,
-                        color: Colors.blue[200],
-                        border: Border.all(color: Colors.blue),
-                        boxShadow: [
-                          BoxShadow(blurRadius: 30, color: Colors.black12)
-                        ],
-                        borderRadius: BorderRadius.circular(5)),
-                 
-                ),
+                      color: Colors.white,
+                      border: Border.all(color: Colors.deepPurple), 
+                      borderRadius: BorderRadius.circular(10)),
+                    child: Image(image:AssetImage("lib/images/sign.png"),
+                    height: 45,),
+                  ),
 
                 onTap: () async {
                   dynamic result = AuthService().signInGoogle();
