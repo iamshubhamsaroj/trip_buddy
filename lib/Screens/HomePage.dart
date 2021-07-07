@@ -31,7 +31,7 @@ class HomePage extends StatelessWidget {
           
           List tripData = data.getTrips();
 
-          return ListView.builder( 
+          return tripData.isNotEmpty ? ListView.builder( 
             itemCount: tripData.length,
             itemBuilder: (context,index){
 
@@ -42,10 +42,10 @@ class HomePage extends StatelessWidget {
                   onTap: (){
                     Get.to(() => TripDetails(tripId: tripData[index].id));
                   },
-                ),
+                ), 
               );
             }
-          );
+          ) : Center(child: Text('No data'),);
         },
       ),
     );

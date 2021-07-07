@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trip_buddy/Screens/Expense/AddExpense.dart';
 import 'package:trip_buddy/Screens/TripDetails/Expenses.dart';
-import 'package:trip_buddy/Screens/TripDetails/Balances.dart';
 import 'package:trip_buddy/Screens/TripDetails/Totals.dart';
 import 'package:trip_buddy/Screens/TripDetails/Bills.dart';
 import 'package:trip_buddy/Screens/TripDetails/EditTripDetails.dart';
@@ -44,7 +43,7 @@ class TripDetails extends StatelessWidget {
           ),
 
           body: DefaultTabController(
-            length: 4,
+            length: 3,
             child: Scaffold(
               appBar: TabBar(
 
@@ -63,12 +62,7 @@ class TripDetails extends StatelessWidget {
                       text: 'Expenses'
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Tab(
-                      text: 'Balances'
-                    ),
-                  ),
+                
                   Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Tab(
@@ -86,9 +80,8 @@ class TripDetails extends StatelessWidget {
               body: TabBarView(
                 children: [
                   Expenses(tripId: tripId),
-                  Balances(),
-                  Totals(),
-                  Bills()
+                  Totals(tripId: tripId),
+                  Bills(tripId:tripId)
                 ],
               ),
 

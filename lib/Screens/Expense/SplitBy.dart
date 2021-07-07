@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trip_buddy/ViewModels/ExpenseViewModel.dart';
+import 'package:trip_buddy/ViewModels/AmountSumViewModel.dart';
+import 'package:trip_buddy/ViewModels/SplitByViewModel.dart';
 
 class SplitBy extends StatelessWidget {
 
@@ -126,7 +127,6 @@ class SplitBy extends StatelessWidget {
                 builder: (data){
 
                   controllers.clear();
-                  List amountList = data.getSplitBy().map((e) => e['amount']).toList();
 
                   return Column(
                     children: [
@@ -134,12 +134,7 @@ class SplitBy extends StatelessWidget {
                         children: List.generate(
                           buddies.length, (index) {
                             
-                            
-                            if(buddies.length == amountList.length){
-                              controllers.add(TextEditingController(text: amountList[index].toString()));
-                            }else{
-                              controllers.add(TextEditingController(text: 0.toString()));
-                            }
+                            controllers.add(TextEditingController(text: 0.toString()));
 
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -193,7 +188,7 @@ class SplitBy extends StatelessWidget {
                                   splitByList.add({
                                     'name' : buddies[i]['name'],
                                     'email' : buddies[i]['email'],
-                                    'amount' : controllers[i].text
+                                    'amount' : int.parse(controllers[i].text)
                                   });
                                 }
 
