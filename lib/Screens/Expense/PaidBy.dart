@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trip_buddy/ViewModels/ExpenseViewModel.dart';
+import 'package:trip_buddy/ViewModels/AmountSumViewModel.dart';
+import 'package:trip_buddy/ViewModels/PaidByViewModel.dart';
 
 class PaidBy extends StatelessWidget {
   final List buddies;
@@ -16,12 +17,11 @@ class PaidBy extends StatelessWidget {
   Widget build(BuildContext context) {
     List<TextEditingController> controllers = [];
 
-    return GetBuilder<ExpenseController>(
-      init: ExpenseController(),
+    return GetBuilder<PaidByController>(
+      init: PaidByController(),
       builder: (expenseData) {
 
         var string = expenseData.getPaidBy().map((e) => e['email']).toList().toString().split('[').last.split(']').first;
-        List amountList = expenseData.getPaidBy().map((e) => e['amount']).toList();
 
         return Scaffold(
           appBar: AppBar(
@@ -64,13 +64,18 @@ class PaidBy extends StatelessWidget {
                               title: Text(buddies[index]['name']),
                               subtitle: Text(buddies[index]['email']),
                               trailing: string == buddies[index]['email']
-                                  ? Icon(Icons.check)
-                                  : null,
+                                ? Icon(Icons.check)
+                                : null,
                               onTap: () {
-                                expenseData.addPaidBy([{
-                                  'name' : buddies[index]['name'], 'email' : buddies[index]['email'],
-                                  'amount' : totalAmount}]);
-                                  
+                                expenseData.addPaidBy(
+                                  [
+                                    {
+                                      'name' : buddies[index]['name'],
+                                      'email' : buddies[index]['email'],
+                                      'amount' : totalAmount
+                                    }
+                                  ]
+                                );
                               },
                             );
                           }
@@ -85,6 +90,7 @@ class PaidBy extends StatelessWidget {
                       )
                     ],
                   ),
+                  
                   GetBuilder<AmountSum>(
                     init: AmountSum(),
                     builder: (amountData) {
@@ -94,11 +100,7 @@ class PaidBy extends StatelessWidget {
                             children: List.generate(
                               buddies.length, (index) {
                                 
-                                if(amountList.length == buddies.length){
-                                  controllers.add(TextEditingController(text: amountList[index].toString()));
-                                }else{
-                                  controllers.add(TextEditingController(text: 0.toString()));
-                                }
+                                controllers.add(TextEditingController(text: 0.toString()));
 
                                 return Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -113,8 +115,9 @@ class PaidBy extends StatelessWidget {
                                           Text(
                                             buddies[index]['email'],
                                             style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.grey),
+                                              fontSize: 14,
+                                              color: Colors.grey
+                                            ),
                                           ),
                                         ],
                                       ),
@@ -166,7 +169,7 @@ class PaidBy extends StatelessWidget {
                                   Get.dialog(
                                     SimpleDialog(
                                       contentPadding: EdgeInsets.all(15),
-                                      title: Text('Whoops'),
+                                      title: Center(child: Text('Whoops')),
                                       children:[
                                         Text('The per person amounts don''t add up to the total amount($totalAmount). You are under by ${totalAmount - result}'),
                                       ] 
@@ -179,7 +182,7 @@ class PaidBy extends StatelessWidget {
                                     
                                     SimpleDialog(
                                       contentPadding: EdgeInsets.all(15),
-                                      title: Text('Whoops'),
+                                      title: Center(child: Text('Whoops')),
                                       children:[
                                         Text('The per person amounts don''t add up to the total amount($totalAmount). You are over by ${result - totalAmount}'),
                                       ] 

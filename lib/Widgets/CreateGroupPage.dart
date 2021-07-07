@@ -55,7 +55,6 @@ Future createTripPage() {
                 if(formKey.currentState!.validate()){
                   DataService().createNewTrip(controller.text);
                 }
-                Get.back();
               },
               child: Text('Save')
             ),
