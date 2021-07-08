@@ -37,7 +37,8 @@ class DataService extends GetxController{
         'buddies' : [{'email': user.email, 'name' : user.displayName}],
         'members' : [user.email],
         'expenses' : [],
-        'lastTS' : Timestamp.now()
+        'lastTS' : Timestamp.now(),
+        'admin' : user.email
       });
 
       Get.back();
@@ -46,6 +47,10 @@ class DataService extends GetxController{
     }catch(e){
       snackBar('Something went wrong. Try again.');
     }
+  }
+
+  deleteTrip(String tripId)async{
+    await FirebaseFirestore.instance.collection('Trips').doc(tripId).delete();
   }
 
   void addNewBuddy( String tripId, String name, String email)async{
@@ -122,7 +127,16 @@ class DataService extends GetxController{
     }
   }
 
-  Stream<Map> getExpenses (String tripId) async*{
+  deleteExpenses(String tripId, Map data)async{
+    await FirebaseFirestore.instance.collection('Trips').doc(tripId).update(
+      {
+        'expenses' : FieldValue.arrayRemove([data]),
+        'lastTS' : Timestamp.now()
+      }
+    );
+  }
+
+  Stream<Map> getExpenses(String tripId) async*{
     yield* FirebaseFirestore.instance.collection('Trips').doc(tripId).snapshots().map((event) {
       if(event.data() != null){
         return event.data()!;

@@ -72,9 +72,20 @@ class _AddExpenseState extends State<AddExpense> {
                 decoration: InputDecoration(
                   labelText: 'Amount spent'
                 ),
+                autovalidateMode: AutovalidateMode.always ,
                 validator: (val){
-                  if(val != null)
-                  return val.isEmpty ? 'Please enter Amount ' : null;
+
+                  
+                  if(val != null){
+                    if(val.isEmpty){
+                      return 'Please enter Amount ';
+                    }
+                    if(!val.isNum){
+                      return 'Please enter amount in numbers only';
+                    }
+                    
+                  }
+                  
                 },
               ),
             ),
@@ -115,12 +126,29 @@ class _AddExpenseState extends State<AddExpense> {
                     decoration: InputDecoration(
                       labelText: 'Expense Paid By'
                     ),
+                    validator: (val){
+                      if(val != null){
+                        if(val.isEmpty){
+                          return 'Please select Paid By';
+                        }                      
+                      }
+                    } ,
                     readOnly: true,
                     onTap: (){
-                      Get.to(() => PaidBy(buddies: widget.buddies,totalAmount: int.parse(amountController.text),))?.then((value) => {
+
+                      if(amountController.text.isEmpty){
+                        alertWidget('Enter amount to continue');
+                      }
+
+                      if(amountController.text.isNotEmpty)
+                      Get.to(() => PaidBy(
+                        
+                        buddies: widget.buddies,
+                        totalAmount: double.parse(double.parse(amountController.text).toStringAsFixed(2))
+
+                      ))?.then((value) => {
 
                         if(value != null){
-                          
                           setState((){
                             paidByController.text = data.getPaidBy().map((e) => e['name']).toList().toString().split('[').last.split(']').first;
                           }),
@@ -134,7 +162,7 @@ class _AddExpenseState extends State<AddExpense> {
                             {
                               'name' : widget.buddies[0]['name'],
                               'email' : widget.buddies[0]['email'],
-                              'amount' : int.parse(amountController.text)
+                              'amount' : double.parse(amountController.text)
                             }
                           ]
                         }
@@ -153,10 +181,6 @@ class _AddExpenseState extends State<AddExpense> {
               init: SplitByController(),
               builder:(data){
 
-                bool isEqual = data.getIsEqual();
-
-                isEqual ? splitByController.text = 'Equally' : splitByController.text = 'UnEqually';
-
                 return Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: TextFormField(
@@ -165,10 +189,30 @@ class _AddExpenseState extends State<AddExpense> {
                     ),
                     controller: splitByController,
                     readOnly: true,
+                    validator: (val){
+                      if(val != null){
+                        if(val.isEmpty){
+                          return 'Please select Split By';
+                        }                      
+                      }
+                    } ,
                     onTap: (){
-                      Get.to(() => SplitBy(buddies: widget.buddies, totalAmount: int.parse(amountController.text)))!.then((value){
+
+                      if(amountController.text.isEmpty){
+                        alertWidget('Enter amount to continue');
+                      }
+
+                      if(amountController.text.isNotEmpty)
+                      Get.to(() => SplitBy(
+                        buddies: widget.buddies, 
+                        totalAmount: double.parse(double.parse(amountController.text).toStringAsFixed(2))
+                      ))!.then((value){
 
                         if(value != null){
+                          bool isEqual = data.getIsEqual();
+
+                          isEqual ? splitByController.text = 'Equally' : splitByController.text = 'UnEqually';
+
                           splitByList = data.getSplitBy();
                         }
 
@@ -180,9 +224,11 @@ class _AddExpenseState extends State<AddExpense> {
                             result.add({
                               'name' : widget.buddies[i]['name'],
                               'email' : widget.buddies[i]['email'],
-                              'amount' : int.parse(amountController.text)/widget.buddies.length
+                              'amount' : double.parse((double.parse(amountController.text)/widget.buddies.length).toStringAsFixed(2))
                             });
                           }
+
+                          splitByController.text = 'Equally';
 
                           splitByList = result;
                         }

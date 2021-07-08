@@ -40,6 +40,7 @@ class ExpenseDetails extends StatelessWidget {
 
                     detailsList[index]['oweTo'].length > 0 ? Padding(
                       padding: const EdgeInsets.all(8.0),
+                      
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

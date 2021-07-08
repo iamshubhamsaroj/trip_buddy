@@ -31,10 +31,10 @@ class ExpenseViewModel extends GetxController{
           {                    //creating empty Map for this buddy
             'name' : buddy['name'],
             'email': buddy['email'],
-            'paid': 0,
-            'split': 0,
-            'owe' : 0,
-            'get' : 0,
+            'paid': 0.0,
+            'split': 0.0,
+            'owe' : 0.0,
+            'get' : 0.0,
             'oweTo' : [],
             'getFrom' : []
           }
@@ -63,10 +63,9 @@ class ExpenseViewModel extends GetxController{
 
               if((buddyDetails[index]['paid'] - splitE['amount']).isNegative){
 
-
                 //if paid - split is neg means this buddy have paid less than his share so he owes money to others
 
-                buddyDetails[index]['owe'] = (buddyDetails[index]['paid'] - splitE['amount']).abs();    //adding owe amount of this buddy
+                buddyDetails[index]['owe'] = double.parse((buddyDetails[index]['paid'] - splitE['amount']).abs().toStringAsFixed(2));  //adding owe amount of this buddy
 
               }
 
@@ -74,8 +73,8 @@ class ExpenseViewModel extends GetxController{
 
                 //if paid - split is pos means this buddy have paid more than his share so he will get money from others
 
-                buddyDetails[index]['get'] = (buddyDetails[index]['paid'] - splitE['amount']).abs();    //adding get amount of this buddy
-
+                buddyDetails[index]['get'] = double.parse((buddyDetails[index]['paid'] - splitE['amount']).abs().toStringAsFixed(2));    //adding get amount of this buddy
+                
               }
             }
           }

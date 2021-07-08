@@ -6,19 +6,22 @@ import 'package:trip_buddy/ViewModels/SplitByViewModel.dart';
 class SplitBy extends StatelessWidget {
 
   final List buddies;
-  final int totalAmount;
+  final double totalAmount;
 
-  const SplitBy({
+  SplitBy({
     Key? key,
     required this.buddies,
     required this.totalAmount,
   }) : super(key: key);
 
+  final formKey = GlobalKey<FormState>();
+
+
   @override
   Widget build(BuildContext context) {
 
     List<TextEditingController> controllers = [];
-    var amount;
+    double amount = 0.0;
 
     return Scaffold(
       appBar: AppBar(
@@ -62,7 +65,7 @@ class SplitBy extends StatelessWidget {
                         children: List.generate(
                           buddies.length, (index) {
 
-                            amount = totalAmount/buddies.length;
+                            amount = totalAmount/buddies.length.toDouble();
                             controllers.add(TextEditingController(text: amount.toString() ));
 
                             return Row(
@@ -114,7 +117,7 @@ class SplitBy extends StatelessWidget {
                           }
                           data.setSplitBy(result);
                           data.setIsEqual(true);
-                          Get.back();
+                          Get.back(result: 'true');
                         }, 
                         child: Text('Save')
                       )
@@ -159,9 +162,23 @@ class SplitBy extends StatelessWidget {
                                   padding: const EdgeInsets.all(8),
                                   child: SizedBox(
                                     width: 85,
-                                    child: TextField(
-                                      controller: controllers[index],
-                                      keyboardType: TextInputType.number,
+                                    child: Form(
+                                      key: formKey,
+                                      child: TextFormField(
+                                        controller: controllers[index],
+                                        keyboardType: TextInputType.number,
+                                        validator: (val){
+
+                                          if(val != null){
+                                            if(val.isEmpty){
+                                              return 'Please enter Amount ';
+                                            }
+                                            if(!val.isNum){
+                                              return 'Please enter amount in numbers only';
+                                            }
+                                          }
+                                        },
+                                      ),
                                     )),
                                 ),
                               ],
@@ -177,51 +194,56 @@ class SplitBy extends StatelessWidget {
 
                             onPressed: (){
 
-                              sumData.setAmount(controllers);
-                                
-                              var result = sumData.getAmount();
-                              List<Map<String,dynamic>> splitByList = [];
+                              if(formKey.currentState!.validate()){
 
-                              if(result == totalAmount){
-
-                                for(int i = 0; i < buddies.length; i++){
-                                  splitByList.add({
-                                    'name' : buddies[i]['name'],
-                                    'email' : buddies[i]['email'],
-                                    'amount' : int.parse(controllers[i].text)
-                                  });
-                                }
-
-                                data.setSplitBy(splitByList);
-                                data.setIsEqual(false);
-                                Get.back();
-
-                              }
-                              if(result < totalAmount){
-
-                                Get.dialog(
-                                  SimpleDialog(
-                                    contentPadding: EdgeInsets.all(15),
-                                    title: Text('Whoops'),
-                                    children:[
-                                      Text('The per person amounts don''t add up to the total amount($totalAmount). You are under by ${totalAmount - result}'),
-                                    ] 
-                                  )
-                                );
-                              }
-                              if(result > totalAmount){
-
-                                Get.dialog(
+                                sumData.setAmount(controllers);
                                   
-                                  SimpleDialog(
-                                    contentPadding: EdgeInsets.all(15),
-                                    title: Text('Whoops'),
-                                    children:[
-                                      Text('The per person amounts don''t add up to the total amount($totalAmount). You are over by ${result - totalAmount}'),
-                                    ] 
-                                  )
-                                );
+                                var result = sumData.getAmount();
+                                List<Map<String,dynamic>> splitByList = [];
+
+                                if(result == totalAmount){
+
+                                  for(int i = 0; i < buddies.length; i++){
+                                    splitByList.add({
+                                      'name' : buddies[i]['name'],
+                                      'email' : buddies[i]['email'],
+                                      'amount' : double.parse(controllers[i].text)
+                                    });
+                                  }
+
+                                  data.setSplitBy(splitByList);
+                                  data.setIsEqual(false);
+                                  Get.back(result: 'true');
+
+                                }
+                                if(result < totalAmount){
+
+                                  Get.dialog(
+                                    SimpleDialog(
+                                      contentPadding: EdgeInsets.all(15),
+                                      title: Text('Whoops'),
+                                      children:[
+                                        Text('The per person amounts don''t add up to the total amount($totalAmount). You are under by ${totalAmount - result}'),
+                                      ] 
+                                    )
+                                  );
+                                }
+                                if(result > totalAmount){
+
+                                  Get.dialog(
+                                    
+                                    SimpleDialog(
+                                      contentPadding: EdgeInsets.all(15),
+                                      title: Text('Whoops'),
+                                      children:[
+                                        Text('The per person amounts don''t add up to the total amount($totalAmount). You are over by ${result - totalAmount}'),
+                                      ] 
+                                    )
+                                  );
+                                }
                               }
+
+                              
 
                             }, 
                             child: Text('Save')

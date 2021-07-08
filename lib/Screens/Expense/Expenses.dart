@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:trip_buddy/Screens/TripDetails/ExpenseDetails.dart';
+import 'package:trip_buddy/Screens/Expense/ExpenseDetails.dart';
+import 'package:trip_buddy/Services/DataService.dart';
 import 'package:trip_buddy/ViewModels/ExpenseViewModel.dart';
 
 class Expenses extends StatelessWidget {
@@ -18,7 +19,7 @@ class Expenses extends StatelessWidget {
         List expenses  = data.getExpenses(tripId)['expenses'];
         List buddies = data.getExpenses(tripId)['buddies'];
 
-        return ListView.builder(
+        return expenses.isNotEmpty ? ListView.builder(
           itemCount: expenses.length,
           itemBuilder:(context,index) {
 
@@ -30,6 +31,19 @@ class Expenses extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Align(
+                      alignment: Alignment.topRight,
+                      child: PopupMenuButton(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                        itemBuilder: (_) => [
+                          PopupMenuItem(
+                            child: Text('Delete'),
+                            value: 'delete',
+                          )
+                        ],
+                        onSelected: (value) => DataService().deleteExpenses(tripId, expenses[index])
+                      )
+                    ),
 
                     Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -82,7 +96,7 @@ class Expenses extends StatelessWidget {
               },
             );
           }
-        );
+        ) : Center(child: Text('No expense added'));
       }
     );
   }

@@ -5,13 +5,16 @@ import 'package:trip_buddy/ViewModels/PaidByViewModel.dart';
 
 class PaidBy extends StatelessWidget {
   final List buddies;
-  final int totalAmount;
+  final double totalAmount;
 
-  const PaidBy({
+  PaidBy({
     Key? key,
     required this.buddies,
     required this.totalAmount,
   }) : super(key: key);
+
+  final formKey = GlobalKey<FormState>();
+
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +87,7 @@ class PaidBy extends StatelessWidget {
 
                       ElevatedButton(
                         onPressed: (){
-                          Get.back();
+                          Get.back(result: 'true');
                         }, 
                         child: Text('Save')
                       )
@@ -126,9 +129,23 @@ class PaidBy extends StatelessWidget {
                                       padding: const EdgeInsets.all(8),
                                       child: SizedBox(
                                         width: 85,
-                                        child: TextField(
-                                          keyboardType: TextInputType.number,
-                                          controller: controllers[index],
+                                        child: Form(
+                                          key: formKey,
+                                          child: TextFormField(
+                                            keyboardType: TextInputType.number,
+                                            controller: controllers[index],
+                                            validator: (val){
+
+                                              if(val != null){
+                                                if(val.isEmpty){
+                                                  return 'Please enter Amount ';
+                                                }
+                                                if(!val.isNum){
+                                                  return 'Please enter amount in numbers only';
+                                                }
+                                              }
+                                            },
+                                          ),
                                         )),
                                     ),
                                   ],
@@ -141,53 +158,56 @@ class PaidBy extends StatelessWidget {
                             child: ElevatedButton(
                               onPressed: () { 
 
-                                List<Map<String, dynamic>> paidByList = [];
+                                if(formKey.currentState!.validate()){
+                                  List<Map<String, dynamic>> paidByList = [];
 
-                                amountData.setAmount(controllers);
+                                  amountData.setAmount(controllers);
 
-                                for(int i =0 ; i< controllers.length ; i++){
-                                  if(int.parse(controllers[i].text) > 0){
-                                    paidByList.add({
-                                      'name' : buddies[i]['name'],
-                                      'email' : buddies[i]['email'],
-                                      'amount' : int.parse(controllers[i].text)
-                                    });
+                                  for(int i =0 ; i< controllers.length ; i++){
+
+                                    if(double.parse(controllers[i].text) > 0){
+                                      paidByList.add({
+                                        'name' : buddies[i]['name'],
+                                        'email' : buddies[i]['email'],
+                                        'amount' : double.parse(controllers[i].text)
+                                      });
+                                    }
                                   }
-                                }
-                                var result = amountData.getAmount();
+                                  var result = amountData.getAmount();
 
-                                if(result == totalAmount){
+                                  if(result == totalAmount){
 
-                                  expenseData.addPaidBy(
-                                    paidByList
-                                  );
-                                  Get.back();
+                                    expenseData.addPaidBy(
+                                      paidByList
+                                    );
+                                    Get.back(result: 'true');
 
-                                }
-                                if(result < totalAmount){
+                                  }
+                                  if(result < totalAmount){
 
-                                  Get.dialog(
-                                    SimpleDialog(
-                                      contentPadding: EdgeInsets.all(15),
-                                      title: Center(child: Text('Whoops')),
-                                      children:[
-                                        Text('The per person amounts don''t add up to the total amount($totalAmount). You are under by ${totalAmount - result}'),
-                                      ] 
-                                    )
-                                  );
-                                }
-                                if(result > totalAmount){
+                                    Get.dialog(
+                                      SimpleDialog(
+                                        contentPadding: EdgeInsets.all(15),
+                                        title: Center(child: Text('Whoops')),
+                                        children:[
+                                          Text('The per person amounts don''t add up to the total amount($totalAmount). You are under by ${totalAmount - result}'),
+                                        ] 
+                                      )
+                                    );
+                                  }
+                                  if(result > totalAmount){
 
-                                  Get.dialog(
-                                    
-                                    SimpleDialog(
-                                      contentPadding: EdgeInsets.all(15),
-                                      title: Center(child: Text('Whoops')),
-                                      children:[
-                                        Text('The per person amounts don''t add up to the total amount($totalAmount). You are over by ${result - totalAmount}'),
-                                      ] 
-                                    )
-                                  );
+                                    Get.dialog(
+                                      
+                                      SimpleDialog(
+                                        contentPadding: EdgeInsets.all(15),
+                                        title: Center(child: Text('Whoops')),
+                                        children:[
+                                          Text('The per person amounts don''t add up to the total amount($totalAmount). You are over by ${result - totalAmount}'),
+                                        ] 
+                                      )
+                                    );
+                                  }
                                 }
                               },
                               child: Text('Save'),

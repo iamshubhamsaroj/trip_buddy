@@ -1,10 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:trip_buddy/Screens/Expense/AddExpense.dart';
-import 'package:trip_buddy/Screens/TripDetails/Expenses.dart';
+import 'package:trip_buddy/Screens/Expense/Expenses.dart';
 import 'package:trip_buddy/Screens/TripDetails/Totals.dart';
 import 'package:trip_buddy/Screens/TripDetails/Bills.dart';
 import 'package:trip_buddy/Screens/TripDetails/EditTripDetails.dart';
+import 'package:trip_buddy/Services/DataService.dart';
 import 'package:trip_buddy/ViewModels/TripViewModel.dart';
 
 
@@ -30,15 +32,30 @@ class TripDetails extends StatelessWidget {
           appBar: AppBar(
             title: Text(tripData['name']),
             actions: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: IconButton(
-                  icon: Icon(Icons.edit),
-                  onPressed: (){
-                    Get.to(() => EditTripDetails(tripId: tripId,));
-                  },
-                ),
-              )
+
+              PopupMenuButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                itemBuilder: (_) => [
+
+                  PopupMenuItem(
+                    child: Text('Edit'),
+                    value: 'edit',
+                  ),
+
+                  if(tripData['admin'] == FirebaseAuth.instance.currentUser!.email)
+                  PopupMenuItem(
+                    child: Text('Delete'),
+                    value: 'delete',
+                  ) 
+                ],
+                onSelected: (value){
+                  value == 'delete' 
+                  ? DataService().deleteTrip(tripId) 
+                  : Get.to(() => EditTripDetails(tripId: tripId));
+                } 
+              ),
+
+              
             ],
           ),
 

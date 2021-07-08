@@ -16,24 +16,26 @@ class Bills extends StatelessWidget {
 
         List expenses = data.getExpenses(tripId)['expenses'];
 
-        return ListView.builder(
+        return expenses.isNotEmpty ? ListView.builder(
           itemCount: expenses.length,
           itemBuilder: (context,index){
 
 
             List bills = expenses[index]['bill'];
 
-            return Padding(
+            return bills.isNotEmpty ? Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text(expenses[index]['description']),
                     ),
-                    bills.isNotEmpty ? Padding(
+
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: List.generate(bills.length, (index){
@@ -50,13 +52,12 @@ class Bills extends StatelessWidget {
                          
                       ),
                     )
-                    : Text('No bills')
                   ],
                 ),
               ),
-            );
+            ) :  Center(child: Text('No bills added'),);
           }
-        );
+        ) : Center(child: Text('No expense added'),);
       }
     );
   }
