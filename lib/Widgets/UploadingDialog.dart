@@ -12,7 +12,7 @@ Future uploadingDialog(String text){
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(color: Color(0xff5458e1),),
+                CircularProgressIndicator(backgroundColor: Color(0xff5458e1),),
                 SizedBox(width:30),
                 Text(text),
               ],
