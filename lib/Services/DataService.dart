@@ -45,12 +45,22 @@ class DataService extends GetxController{
       snackBar('New trip added successfully');
 
     }catch(e){
+      Get.back();
       snackBar('Something went wrong. Try again.');
     }
   }
 
   deleteTrip(String tripId)async{
-    await FirebaseFirestore.instance.collection('Trips').doc(tripId).delete();
+    try{
+      await FirebaseFirestore.instance.collection('Trips').doc(tripId).delete();
+      Get.back();
+      Get.back();
+      snackBar('Trip deleted successfully');
+    }catch(e){
+      Get.back();
+      Get.back();
+      snackBar('Something went wrong. Try again.');
+    }
   }
 
   void addNewBuddy( String tripId, String name, String email)async{
@@ -65,6 +75,7 @@ class DataService extends GetxController{
       snackBar('Your new buddy added successfully');
 
     }catch(e){
+      Get.back();
       snackBar('Something went wrong. Try again.');
     }
   }
@@ -123,17 +134,26 @@ class DataService extends GetxController{
       snackBar('Expense added successfully');
 
     }catch(e){
+      Get.back();
       snackBar('Something went wrong. Try again.');
     }
   }
 
   deleteExpenses(String tripId, Map data)async{
-    await FirebaseFirestore.instance.collection('Trips').doc(tripId).update(
-      {
-        'expenses' : FieldValue.arrayRemove([data]),
-        'lastTS' : Timestamp.now()
-      }
-    );
+    try{
+      await FirebaseFirestore.instance.collection('Trips').doc(tripId).update(
+        {
+          'expenses' : FieldValue.arrayRemove([data]),
+          'lastTS' : Timestamp.now()
+        }
+      );
+      Get.back();
+      snackBar('Expense deleted successfully');
+    }catch(e){
+      Get.back();
+      snackBar('Something went wrong. Try again.');
+
+    }
   }
 
   Stream<Map> getExpenses(String tripId) async*{

@@ -28,7 +28,7 @@ class TripDetails extends StatelessWidget {
           }
         });
 
-        return Scaffold(
+        return tripData != null ? Scaffold(
           appBar: AppBar(
             title: Text(tripData['name']),
             actions: [
@@ -109,7 +109,7 @@ class TripDetails extends StatelessWidget {
               
             ),
           )
-        );
+        ) : Scaffold(body: Center(child: CircularProgressIndicator()));
       }  
     );
   }
