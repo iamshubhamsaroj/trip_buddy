@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:trip_buddy/Services/DataService.dart';
-import 'package:contacts_service/contacts_service.dart';
 
 class AddBuddy extends StatelessWidget {
   final String tripId;
@@ -89,51 +88,5 @@ class AddBuddy extends StatelessWidget {
         ),
       ),
     );
-  }
-}
-
-class Contacts extends StatefulWidget {
-  const Contacts({Key? key}) : super(key: key);
-
-  @override
-  _ContactsState createState() => _ContactsState();
-}
-
-class _ContactsState extends State<Contacts> {
-  late Iterable<Contact> _contacts;
-
-  @override
-  void initState() {
-    getContacts();
-    super.initState();
-  }
-
-  Future<void> getContacts() async {
-    final Iterable<Contact> contacts = await ContactsService.getContacts();
-    setState(() {
-      _contacts = contacts;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        child: ListView.builder(
-      itemCount: _contacts.length,
-      itemBuilder: (BuildContext context, int index) {
-        Contact contact = _contacts.elementAt(index);
-        return ListTile(
-          contentPadding:
-              const EdgeInsets.symmetric(vertical: 2, horizontal: 18),
-          leading:  CircleAvatar(
-                  child: Text(contact.initials()),
-                  backgroundColor: Theme.of(context).accentColor,
-                ),
-          title: Text(contact.displayName ?? ''),
-          //This can be further expanded to showing contacts detail
-          // onPressed().
-        );
-      },
-    ));
   }
 }
