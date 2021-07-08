@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:trip_buddy/ViewModels/TripViewModel.dart';
 import 'package:trip_buddy/Screens/TripDetails/AddBuddy.dart';
+import 'package:trip_buddy/ViewModels/TripViewModel.dart';
 
 
 class EditTripDetails extends StatelessWidget {
@@ -25,7 +25,7 @@ class EditTripDetails extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.person_add),
         onPressed: (){
-          Get.to(() => AddBuddy(tripId: tripId,));
+          addBuddy(tripId);
         },
       ),
 
